@@ -7,6 +7,60 @@ local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
 
 local lp = Players.LocalPlayer
+
+local function addDiscordTag()
+    local char = lp.Character or lp.CharacterAdded:Wait()
+    local head = char:WaitForChild("Head")
+
+    if head:FindFirstChild("DiscordTag") then
+        head.DiscordTag:Destroy()
+    end
+
+    local gui = Instance.new("BillboardGui")
+    gui.Name = "DiscordTag"
+    gui.Size = UDim2.new(0, 200, 0, 40)
+    gui.StudsOffset = Vector3.new(0, 2.5, 0)
+    gui.AlwaysOnTop = true
+    gui.Parent = head
+
+    local txt = Instance.new("TextLabel")
+    txt.Size = UDim2.new(1, 0, 1, 0)
+    txt.BackgroundTransparency = 1
+    txt.Text = "https://discord.gg/aCbdbWpch" -- حط رابطك هنا
+    txt.Font = Enum.Font.GothamBlack
+    txt.TextScaled = true
+    txt.TextColor3 = Color3.fromRGB(220,220,220) -- فضي
+    txt.Parent = gui
+
+    -- تحديد أبيض
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.new(1,1,1)
+    stroke.Thickness = 1.5
+    stroke.Parent = txt
+
+    -- تدرج فضي لامع
+    local grad = Instance.new("UIGradient")
+    grad.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(150,150,150)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255,255,255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(150,150,150)),
+    })
+    grad.Parent = txt
+
+    -- حركة لمعان
+    task.spawn(function()
+        while txt.Parent do
+            for i = -1,1,0.02 do
+                grad.Offset = Vector2.new(i,0)
+                task.wait(0.01)
+            end
+        end
+    end)
+end
+
+addDiscordTag()
+lp.CharacterAdded:Connect(addDiscordTag)
+
 local lagEnabled = false
 local speedEnabled = false
 local lagAmount = 0.1
